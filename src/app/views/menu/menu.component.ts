@@ -15,6 +15,7 @@ export class MenuComponent {
     private menuService = inject(MenuService);
 
     items = this.menuService.getItems();
+    categories = this.menuService.categories;
     viewMode = signal<'grid' | 'list'>('grid');
 
     // Modal State

@@ -76,14 +76,11 @@
 
             <div class="form-group">
                 <label>Category</label>
-                <select [(ngModel)]="currentItem.category" name="category" required>
-                    <option value="Snack">Snack</option>
-                    <option value="Portion">Portion</option>
-                    <option value="Drink">Drink</option>
-                    <option value="Combo">Combo</option>
-                    <option value="Dessert">Dessert</option>
-                    <option value="Other">Other</option>
-                </select>
+                <input list="categoryList" [(ngModel)]="currentItem.category" name="category" required
+                    placeholder="Select or type new...">
+                <datalist id="categoryList">
+                    <option *ngFor="let cat of categories()" [value]="cat"></option>
+                </datalist>
             </div>
 
             <div class="row-group">

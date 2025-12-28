@@ -1,4 +1,4 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, signal, inject, computed } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MenuItem } from '../models/menu-item.model';
 import { map, tap } from 'rxjs/operators';
@@ -14,6 +14,13 @@ export class MenuService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/menu`;
     private items = signal<MenuItem[]>([]);
+
+    // Computed signal to get unique categories from loaded items
+    categories = computed(() => {
+        const uniqueCategories = new Set(this.items().map(item => item.category || 'Other'));
+        return Array.from(uniqueCategories).sort();
+    });
+
     private cld = new Cloudinary({
         cloud: {
             cloudName: environment.cloudinary.cloudName
@@ -35,7 +42,7 @@ export class MenuService {
 
         const publicId = filename;
         const myImage = this.cld.image(publicId);
-        myImage.resize(fill().width(150).height(150)); // Smaller for admin table
+        myImage.resize(fill().width(400).height(400)); // Smaller for admin table
 
         return myImage.toURL();
     }
