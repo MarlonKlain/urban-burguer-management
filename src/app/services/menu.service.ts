@@ -1,7 +1,9 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MenuItem } from '../models/menu-item.model';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { Cloudinary } from '@cloudinary/url-gen';
+import { fill } from '@cloudinary/url-gen/actions/resize';
 
 import { environment } from '../../environments/environment';
 
@@ -12,6 +14,11 @@ export class MenuService {
     private http = inject(HttpClient);
     private apiUrl = `${environment.apiUrl}/menu`;
     private items = signal<MenuItem[]>([]);
+    private cld = new Cloudinary({
+        cloud: {
+            cloudName: environment.cloudinary.cloudName
+        }
+    });
 
     private getHeaders(): HttpHeaders {
         const token = localStorage.getItem('token');
@@ -20,8 +27,27 @@ export class MenuService {
         });
     }
 
+    private getProductImage(originalUrl: string): string {
+        if (!originalUrl) return 'assets/placeholder.png'; // Fallback
+
+        const filename = originalUrl.split('/').pop()?.split('.')[0];
+        if (!filename) return originalUrl;
+
+        const publicId = filename;
+        const myImage = this.cld.image(publicId);
+        myImage.resize(fill().width(150).height(150)); // Smaller for admin table
+
+        return myImage.toURL();
+    }
+
     getItems() {
         this.http.get<MenuItem[]>(this.apiUrl, { headers: this.getHeaders() })
+            .pipe(
+                map(data => data.map(item => ({
+                    ...item,
+                    imageUrl: this.getProductImage(item.imageUrl)
+                })))
+            )
             .subscribe(data => this.items.set(data));
         return this.items;
     }
