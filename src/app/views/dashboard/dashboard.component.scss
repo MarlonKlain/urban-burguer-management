@@ -1,0 +1,24 @@
+.dashboard-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    width: 90%;
+    max-width: 1200px;
+    padding: 2rem;
+
+    @media (min-width: 768px) {
+        padding: 3rem;
+    }
+
+    text-align: center;
+    color: var(--text-color);
+}

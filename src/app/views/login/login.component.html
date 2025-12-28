@@ -1,0 +1,23 @@
+<div class="login-container">
+  <div class="glass-card">
+    <h2>Welcome Back to Urban Burger</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" [(ngModel)]="email" name="email" required placeholder="Enter your email">
+      </div>
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" [(ngModel)]="password" name="password" required
+          placeholder="Enter your password">
+      </div>
+      <button type="submit" class="btn-primary">LOGIN</button>
+    </form>
+    <div class="register-link">
+      <p>Don't have an account? <a routerLink="/register">Sign Up</a></p>
+    </div>
+  </div>
+</div>

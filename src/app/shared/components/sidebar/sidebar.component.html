@@ -1,0 +1,40 @@
+<div class="sidebar-wrapper" [class.open]="isOpen()">
+    <!-- Mobile Overlay -->
+    <div class="overlay" (click)="closeSidebar()"></div>
+
+    <aside class="sidebar glass-card">
+        <div class="sidebar-header">
+            <h2>Urban Burger</h2>
+            <button class="close-btn" (click)="closeSidebar()">×</button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a routerLink="/dashboard" routerLinkActive="active" (click)="closeSidebar()">
+                <span class="icon">🏠</span> Dashboard
+            </a>
+            <a routerLink="/live-orders" routerLinkActive="active" (click)="closeSidebar()">
+                <span class="icon">🔥</span> Live Orders
+            </a>
+            <a routerLink="/menu" routerLinkActive="active" (click)="closeSidebar()">
+                <span class="icon">🍔</span> Menu
+            </a>
+            <a routerLink="/cupons" routerLinkActive="active" (click)="closeSidebar()">
+                <span class="icon">🎟️</span> Cupons
+            </a>
+            <a routerLink="/analytics" routerLinkActive="active" (click)="closeSidebar()">
+                <span class="icon">📈</span> Analytics
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a routerLink="/login" class="logout-link">
+                <span class="icon">🚪</span> Logout
+            </a>
+        </div>
+    </aside>
+</div>
+
+<!-- Mobile Toggle Button (Visible only on mobile) -->
+<button class="hamburger-btn" (click)="toggleSidebar()">
+    ☰
+</button>

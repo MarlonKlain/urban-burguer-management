@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    padding: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    text-align: center;
+}

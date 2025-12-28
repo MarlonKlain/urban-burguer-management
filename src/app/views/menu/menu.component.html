@@ -1,0 +1,114 @@
+<div class="menu-container">
+    <header class="page-header">
+        <h1>Menu Management</h1>
+        <div class="actions">
+            <button class="btn-toggle" (click)="toggleView()"
+                [title]="viewMode() === 'grid' ? 'Switch to List' : 'Switch to Grid'">
+                {{ viewMode() === 'grid' ? '📄 List View' : '🔲 Grid View' }}
+            </button>
+            <button class="btn-primary" (click)="openAddModal()">
+                + Add Item
+            </button>
+        </div>
+    </header>
+
+    <!-- Grid View -->
+    <div *ngIf="viewMode() === 'grid'" class="grid-layout">
+        <div *ngFor="let item of items()" class="menu-card glass-card">
+            <div class="card-image" [style.backgroundImage]="'url(' + item.imageUrl + ')'"></div>
+            <div class="card-content">
+                <h3>{{ item.name }}</h3>
+                <span class="category-badge">{{ item.category }}</span>
+                <p class="ingredients">{{ item.ingredients }}</p>
+                <div class="price-row">
+                    <span class="price">R$ {{ item.price }}</span>
+                    <div class="card-actions">
+                        <button class="btn-icon edit" (click)="openEditModal(item)">✏️</button>
+                        <button class="btn-icon delete" (click)="deleteItem(item.id)">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- List View -->
+    <div *ngIf="viewMode() === 'list'" class="list-layout glass-card">
+        <div class="list-header">
+            <span>Image</span>
+            <span>Name</span>
+            <span>Ingredients</span>
+            <span>Category</span>
+            <span>Price</span>
+            <span>Actions</span>
+        </div>
+        <div *ngFor="let item of items()" class="list-row">
+            <div class="list-img">
+                <img [src]="item.imageUrl" alt="{{ item.name }}">
+            </div>
+            <div class="list-name">{{ item.name }}</div>
+            <div class="list-desc">{{ item.ingredients }}</div>
+            <div class="list-category">{{ item.category }}</div>
+            <div class="list-price">R$ {{ item.price }}</div>
+            <div class="list-actions">
+                <button class="btn-icon edit" (click)="openEditModal(item)">✏️</button>
+                <button class="btn-icon delete" (click)="deleteItem(item.id)">🗑️</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" *ngIf="isModalOpen()">
+    <div class="modal glass-card">
+        <h2>{{ isEditing() ? 'Edit Item' : 'Add New Item' }}</h2>
+
+        <form (ngSubmit)="saveItem()">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" [(ngModel)]="currentItem.name" name="name" required placeholder="Ex: Bacon Burger">
+            </div>
+
+            <div class="form-group">
+                <label>Ingredients</label>
+                <textarea [(ngModel)]="currentItem.ingredients" name="ingredients" required
+                    placeholder="Ex: Beef, Cheese, Bacon..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select [(ngModel)]="currentItem.category" name="category" required>
+                    <option value="Snack">Snack</option>
+                    <option value="Portion">Portion</option>
+                    <option value="Drink">Drink</option>
+                    <option value="Combo">Combo</option>
+                    <option value="Dessert">Dessert</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="row-group">
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="currentItem.featured" name="featured">
+                        Featured Item?
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Price ($)</label>
+                <input type="number" [(ngModel)]="currentItem.price" name="price" required step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label>Image URL</label>
+                <input type="text" [(ngModel)]="currentItem.imageUrl" name="imageUrl" placeholder="https://...">
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" (click)="closeModal()">Cancel</button>
+                <button type="submit" class="btn-primary">Save Item</button>
+            </div>
+        </form>
+    </div>
+</div>
