@@ -1,7 +1,8 @@
 import { Injectable, signal, inject, computed } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MenuItem } from '../models/menu-item.model';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
+import { of, throwError } from 'rxjs';
 import { Cloudinary } from '@cloudinary/url-gen';
 import { fill } from '@cloudinary/url-gen/actions/resize';
 
@@ -49,7 +50,8 @@ export class MenuService {
 
         if (!filename) return originalUrl;
 
-        const publicId = filename;
+        // Prepend the folder to the public ID
+        const publicId = `${environment.cloudinary.folder}/${filename}`;
         const myImage = this.cld.image(publicId);
         myImage.resize(fill().width(400).height(400)); // Smaller for admin table
 
@@ -104,5 +106,15 @@ export class MenuService {
             .subscribe(() => {
                 this.items.update(values => values.filter(item => item.id !== id));
             });
+    }
+
+    uploadImage(file: File) {
+        const url = `https://api.cloudinary.com/v1_1/${environment.cloudinary.cloudName}/image/upload`;
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', environment.cloudinary.uploadPreset);
+        formData.append('folder', environment.cloudinary.folder);
+
+        return this.http.post<any>(url, formData);
     }
 }

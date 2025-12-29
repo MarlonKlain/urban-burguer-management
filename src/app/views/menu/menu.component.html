@@ -99,7 +99,12 @@
 
             <div class="form-group">
                 <label>Image URL</label>
-                <input type="text" [(ngModel)]="currentItem.imageUrl" name="imageUrl" placeholder="https://...">
+                <div class="image-upload-row">
+                    <input type="file" (change)="onFileSelected($event)" accept="image/*">
+                    <span *ngIf="isUploading()" class="uploading-spinner">⏳ Uploading...</span>
+                </div>
+                <input type="text" [(ngModel)]="currentItem.imageUrl" name="imageUrl" placeholder="https://..."
+                    [disabled]="isUploading()">
             </div>
 
             <div class="modal-actions">

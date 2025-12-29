@@ -9,7 +9,11 @@ import { MenuItem } from '../../models/menu-item.model';
     standalone: true,
     imports: [CommonModule, FormsModule],
     templateUrl: './menu.component.html',
-    styleUrl: './menu.component.scss'
+    styleUrl: './menu.component.scss',
+    styles: [`
+        .image-upload-row { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .uploading-spinner { font-size: 0.9em; color: #666; }
+    `]
 })
 export class MenuComponent {
     private menuService = inject(MenuService);
@@ -21,6 +25,7 @@ export class MenuComponent {
     // Modal State
     isModalOpen = signal(false);
     isEditing = signal(false);
+    isUploading = signal(false);
 
     // Form Data
     currentItem: Partial<MenuItem> = {
@@ -59,6 +64,24 @@ export class MenuComponent {
             this.menuService.addItem(this.currentItem as Omit<MenuItem, 'id'>);
         }
         this.closeModal();
+    }
+
+    onFileSelected(event: any) {
+        const file = event.target.files[0];
+        if (file) {
+            this.isUploading.set(true);
+            this.menuService.uploadImage(file).subscribe({
+                next: (response: any) => {
+                    this.currentItem.imageUrl = response.secure_url;
+                    this.isUploading.set(false);
+                },
+                error: (err: any) => {
+                    console.error('Upload failed', err);
+                    this.isUploading.set(false);
+                    alert('Image upload failed. Please try again.');
+                }
+            });
+        }
     }
 
     deleteItem(id: number) {
