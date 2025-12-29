@@ -15,7 +15,7 @@
     <!-- Grid View -->
     <div *ngIf="viewMode() === 'grid'" class="grid-layout">
         <div *ngFor="let item of items()" class="menu-card glass-card">
-            <div class="card-image" [style.backgroundImage]="'url(' + item.imageUrl + ')'"></div>
+            <div class="card-image" [style.backgroundImage]="'url(' + item.displayUrl + ')'"></div>
             <div class="card-content">
                 <h3>{{ item.name }}</h3>
                 <span class="category-badge">{{ item.category }}</span>
@@ -43,7 +43,7 @@
         </div>
         <div *ngFor="let item of items()" class="list-row">
             <div class="list-img">
-                <img [src]="item.imageUrl" alt="{{ item.name }}">
+                <img [src]="item.displayUrl" alt="{{ item.name }}">
             </div>
             <div class="list-name">{{ item.name }}</div>
             <div class="list-desc">{{ item.ingredients }}</div>

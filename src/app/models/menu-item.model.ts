@@ -4,6 +4,7 @@ export interface MenuItem {
     ingredients: string;
     price: number;
     imageUrl: string;
+    displayUrl?: string; // For optimized Cloudinary display
     category: string;
     featured: boolean;
 }

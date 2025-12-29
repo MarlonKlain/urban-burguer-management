@@ -37,7 +37,16 @@ export class MenuService {
     private getProductImage(originalUrl: string): string {
         if (!originalUrl) return 'assets/placeholder.png'; // Fallback
 
-        const filename = originalUrl.split('/').pop()?.split('.')[0];
+        // Extract filename from URL
+        let filename = originalUrl.split('/').pop();
+        if (!filename) return originalUrl;
+
+        // Remove query parameters (e.g., ?_a=...)
+        filename = filename.split('?')[0];
+
+        // Remove extension (e.g., .png)
+        filename = filename.split('.')[0];
+
         if (!filename) return originalUrl;
 
         const publicId = filename;
@@ -52,7 +61,7 @@ export class MenuService {
             .pipe(
                 map(data => data.map(item => ({
                     ...item,
-                    imageUrl: this.getProductImage(item.imageUrl)
+                    displayUrl: this.getProductImage(item.imageUrl) // Set display URL, keep original imageUrl
                 })))
             )
             .subscribe(data => this.items.set(data));
@@ -60,16 +69,33 @@ export class MenuService {
     }
 
     addItem(item: Omit<MenuItem, 'id'>) {
+        console.log('[MenuService] Adding item:', item);
         this.http.post<MenuItem>(this.apiUrl, item, { headers: this.getHeaders() })
-            .subscribe(newItem => {
-                this.items.update(values => [...values, newItem]);
+            .subscribe({
+                next: (newItem) => {
+                    const itemWithDisplay = {
+                        ...newItem,
+                        displayUrl: this.getProductImage(newItem.imageUrl)
+                    };
+                    this.items.update(values => [...values, itemWithDisplay]);
+                },
+                error: (err) => console.error('[MenuService] Add failed:', err)
             });
     }
 
     updateItem(id: number, updatedItem: MenuItem) {
+        console.log(`[MenuService] Updating item ${id}:`, updatedItem);
         this.http.put<MenuItem>(`${this.apiUrl}/${id}`, updatedItem, { headers: this.getHeaders() })
-            .subscribe(returnedItem => {
-                this.items.update(values => values.map(item => item.id === id ? returnedItem : item));
+            .subscribe({
+                next: (returnedItem) => {
+                    console.log('[MenuService] Update success:', returnedItem);
+                    const itemWithDisplay = {
+                        ...returnedItem,
+                        displayUrl: this.getProductImage(returnedItem.imageUrl)
+                    };
+                    this.items.update(values => values.map(item => item.id === id ? itemWithDisplay : item));
+                },
+                error: (err) => console.error('[MenuService] Update failed:', err)
             });
     }
 
