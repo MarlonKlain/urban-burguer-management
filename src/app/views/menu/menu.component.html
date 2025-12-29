@@ -100,11 +100,11 @@
             <div class="form-group">
                 <label>Image URL</label>
                 <div class="image-upload-row">
+                    <span *ngIf="currentItem.imageUrl" class="current-image-name">Current: {{ currentItem.imageUrl
+                        }}</span>
                     <input type="file" (change)="onFileSelected($event)" accept="image/*">
                     <span *ngIf="isUploading()" class="uploading-spinner">⏳ Uploading...</span>
                 </div>
-                <input type="text" [(ngModel)]="currentItem.imageUrl" name="imageUrl" placeholder="https://..."
-                    [disabled]="isUploading()">
             </div>
 
             <div class="modal-actions">
