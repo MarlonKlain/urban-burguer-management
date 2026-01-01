@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://urban-burger-backend-production.up.railway.app/api',
+    apiUrl: 'http://localhost:8080/api',
     cloudinary: {
         cloudName: 'dx2ty3i4g',
         folder: 'Urban Burger',
