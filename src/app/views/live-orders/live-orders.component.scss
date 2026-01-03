@@ -1,18 +1,91 @@
-.container {
-    display: flex;
-    justify-content: center;
-    padding: 2rem;
+.live-orders-container {
+    padding: 20px;
+
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
 }
 
-.glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 20px;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
-    padding: 2rem;
-    width: 100%;
-    max-width: 1200px;
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.order-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #ccc;
+
+    &.new-order {
+        border-left-color: #28a745; // Green for new/pending
+        animation: flash 1s ease-out;
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #555;
+
+        .order-status {
+            text-transform: uppercase;
+            font-size: 0.8em;
+            padding: 2px 6px;
+            border-radius: 4px;
+
+            &.pending {
+                background: #e6fffa;
+                color: #047857;
+            }
+        }
+    }
+
+    .order-customer {
+        margin-bottom: 10px;
+        font-size: 0.95em;
+    }
+
+    .order-items {
+        margin-bottom: 10px;
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                margin-bottom: 4px;
+                color: #444;
+            }
+        }
+    }
+
+    .order-total {
+        font-weight: bold;
+        font-size: 1.1em;
+        text-align: right;
+        color: #333;
+    }
+}
+
+.no-orders {
     text-align: center;
+    color: #888;
+    font-style: italic;
+    margin-top: 20px;
+}
+
+@keyframes flash {
+    from {
+        background-color: #d4edda;
+    }
+
+    to {
+        background-color: white;
+    }
 }

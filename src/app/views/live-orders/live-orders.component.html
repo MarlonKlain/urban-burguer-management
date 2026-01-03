@@ -1,6 +1,30 @@
-<div class="container">
-    <div class="glass-card">
-        <h1>Live Orders</h1>
-        <p>Monitor real-time incoming orders here.</p>
+<div class="live-orders-container">
+    <h2>Live Orders</h2>
+    <div class="orders-list">
+        <div *ngFor="let order of orders" class="order-card" [ngClass]="{'new-order': order.status === 'PENDING'}">
+            <div class="order-header">
+                <span class="order-id">#{{ order.id }}</span>
+                <span class="order-time">{{ order.createdAt | date:'mediumTime' }}</span>
+                <span class="order-status" [ngClass]="order.status?.toLowerCase()">{{ order.status }}</span>
+            </div>
+            <div class="order-customer">
+                <strong>{{ order.customerName }}</strong>
+                <br>
+                <small>{{ order.customerPhone }}</small>
+            </div>
+            <div class="order-items">
+                <ul>
+                    <li *ngFor="let item of formatItems(order.items)">
+                        {{ item.quantity }}x {{ item.name }}
+                    </li>
+                </ul>
+            </div>
+            <div class="order-total">
+                Total: {{ order.total | currency:'BRL' }}
+            </div>
+        </div>
+        <div *ngIf="orders.length === 0" class="no-orders">
+            No orders yet.
+        </div>
     </div>
 </div>
