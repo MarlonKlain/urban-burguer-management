@@ -1,91 +1,243 @@
-.live-orders-container {
-    padding: 20px;
+// Kanban Container
+.kanban-container {
+    display: flex;
+    gap: 16px;
+    padding: 24px;
+    height: calc(100vh - 70px); // Adjust based on header/navbar height
+    overflow-x: auto;
+    background-color: #f3f4f6; // Light cool gray background
 
-    h2 {
-        color: #333;
-        margin-bottom: 20px;
+    // Scrollbar beautification
+    &::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+
+    // Common Column Styles
+    .kanban-column {
+        flex: 1;
+        min-width: 280px;
+        max-width: 350px;
+        background: #e5e7eb; // Neutral column bg
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+        .column-header {
+            padding: 16px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h3 {
+                margin: 0;
+                font-size: 1rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .count-badge {
+                background: rgba(255, 255, 255, 0.2);
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-size: 0.85rem;
+                font-weight: bold;
+            }
+        }
+
+        .order-list {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            &::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: rgba(0, 0, 0, 0.1);
+                border-radius: 3px;
+            }
+        }
+    }
+
+    // Specific Column Colors
+    .kanban-column.received .column-header {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+    }
+
+    // Orange
+    .kanban-column.preparing .column-header {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    // Blue
+    .kanban-column.ready .column-header {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+    }
+
+    // Green
+    .kanban-column.delivery .column-header {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+    }
+
+    // Indigo
+    .kanban-column.completed {
+        background: #f1f5f9;
+
+        .column-header {
+            background: linear-gradient(135deg, #64748b, #475569);
+        }
+
+        // Slate
     }
 }
 
-.orders-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
+// Order Card Styles
 .order-card {
     background: white;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    border-left: 5px solid #ccc;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
 
-    &.new-order {
-        border-left-color: #28a745; // Green for new/pending
-        animation: flash 1s ease-out;
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     }
 
-    .order-header {
+    &.fade-in {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .order-top {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 10px;
-        font-weight: bold;
-        color: #555;
+        align-items: center;
+        margin-bottom: 8px;
 
-        .order-status {
-            text-transform: uppercase;
-            font-size: 0.8em;
+        .order-id {
+            font-weight: 800;
+            color: #374151;
+            font-size: 1.1rem;
+        }
+
+        .order-timer {
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: #ffe4e6;
+            color: #be123c;
             padding: 2px 6px;
             border-radius: 4px;
+        }
 
-            &.pending {
-                background: #e6fffa;
-                color: #047857;
-            }
+        .order-time {
+            font-size: 0.85rem;
+            color: #6b7280;
         }
     }
 
     .order-customer {
-        margin-bottom: 10px;
-        font-size: 0.95em;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
     }
 
     .order-items {
-        margin-bottom: 10px;
+        margin-bottom: 12px;
+        background: #f9fafb;
+        padding: 8px;
+        border-radius: 6px;
 
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .order-item {
+            font-size: 0.9rem;
+            color: #4b5563;
+            margin-bottom: 4px;
 
-            li {
-                margin-bottom: 4px;
-                color: #444;
+            .qty {
+                font-weight: 700;
+                color: #111827;
+                margin-right: 4px;
             }
         }
     }
 
-    .order-total {
-        font-weight: bold;
-        font-size: 1.1em;
-        text-align: right;
-        color: #333;
+    .order-actions {
+        .btn-action {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: white;
+
+            &.start {
+                background: #f97316;
+
+                &:hover {
+                    background: #ea580c;
+                }
+            }
+
+            &.ready {
+                background: #3b82f6;
+
+                &:hover {
+                    background: #2563eb;
+                }
+            }
+
+            &.deliver {
+                background: #22c55e;
+
+                &:hover {
+                    background: #16a34a;
+                }
+            }
+
+            &.complete {
+                background: #6366f1;
+
+                &:hover {
+                    background: #4f46e5;
+                }
+            }
+        }
     }
 }
 
-.no-orders {
+.empty-state {
     text-align: center;
-    color: #888;
+    color: #9ca3af;
     font-style: italic;
     margin-top: 20px;
+    font-size: 0.9rem;
 }
 
-@keyframes flash {
+@keyframes fadeIn {
     from {
-        background-color: #d4edda;
+        opacity: 0;
+        transform: translateY(10px);
     }
 
     to {
-        background-color: white;
+        opacity: 1;
+        transform: translateY(0);
     }
 }

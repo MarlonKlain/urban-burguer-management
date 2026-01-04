@@ -1,30 +1,120 @@
-<div class="live-orders-container">
-    <h2>Live Orders</h2>
-    <div class="orders-list">
-        <div *ngFor="let order of orders" class="order-card" [ngClass]="{'new-order': order.status === 'PENDING'}">
-            <div class="order-header">
-                <span class="order-id">#{{ order.id }}</span>
-                <span class="order-time">{{ order.createdAt | date:'mediumTime' }}</span>
-                <span class="order-status" [ngClass]="order.status?.toLowerCase()">{{ order.status }}</span>
+<div class="kanban-container">
+    <!-- 1. Received -->
+    <div class="kanban-column received">
+        <div class="column-header">
+            <h3>🔔 Recebidos</h3>
+            <span class="count-badge">{{ pendingOrders.length }}</span>
+        </div>
+        <div class="order-list">
+            <div *ngFor="let order of pendingOrders" class="order-card fade-in">
+                <div class="order-top">
+                    <span class="order-id">#{{ order.id }}</span>
+                    <span class="order-timer text-danger">{{ getElapsedTime(order.createdAt) }}</span>
+                </div>
+                <div class="order-customer">
+                    {{ order.customerName || 'Cliente sem nome' }}
+                </div>
+                <div class="order-items">
+                    <div *ngFor="let item of formatItems(order.items)" class="order-item">
+                        <span class="qty">{{ item.quantity }}x</span> {{ item.name }}
+                    </div>
+                </div>
+                <div class="order-actions">
+                    <button class="btn-action start" (click)="updateStatus(order, 'PREPARING')">
+                        Iniciar Preparo
+                    </button>
+                </div>
             </div>
-            <div class="order-customer">
-                <strong>{{ order.customerName }}</strong>
-                <br>
-                <small>{{ order.customerPhone }}</small>
-            </div>
-            <div class="order-items">
-                <ul>
-                    <li *ngFor="let item of formatItems(order.items)">
-                        {{ item.quantity }}x {{ item.name }}
-                    </li>
-                </ul>
-            </div>
-            <div class="order-total">
-                Total: {{ order.total | currency:'BRL' }}
+            <div *ngIf="pendingOrders.length === 0" class="empty-state">Sem pedidos pendentes</div>
+        </div>
+    </div>
+
+    <!-- 2. Preparing -->
+    <div class="kanban-column preparing">
+        <div class="column-header">
+            <h3>👨‍🍳 Preparando</h3>
+            <span class="count-badge">{{ preparingOrders.length }}</span>
+        </div>
+        <div class="order-list">
+            <div *ngFor="let order of preparingOrders" class="order-card fade-in">
+                <div class="order-top">
+                    <span class="order-id">#{{ order.id }}</span>
+                    <span class="order-timer">{{ getElapsedTime(order.createdAt) }}</span>
+                </div>
+                <div class="order-items">
+                    <div *ngFor="let item of formatItems(order.items)" class="order-item">
+                        <span class="qty">{{ item.quantity }}x</span> <span class="item-name">{{ item.name }}</span>
+                    </div>
+                </div>
+                <div class="order-actions">
+                    <button class="btn-action ready" (click)="updateStatus(order, 'READY')">
+                        Marcar Pronto
+                    </button>
+                </div>
             </div>
         </div>
-        <div *ngIf="orders.length === 0" class="no-orders">
-            No orders yet.
+    </div>
+
+    <!-- 3. Ready -->
+    <div class="kanban-column ready">
+        <div class="column-header">
+            <h3>✅ Prontos</h3>
+            <span class="count-badge">{{ readyOrders.length }}</span>
+        </div>
+        <div class="order-list">
+            <div *ngFor="let order of readyOrders" class="order-card fade-in">
+                <div class="order-top">
+                    <span class="order-id">#{{ order.id }}</span>
+                    <span class="order-time">{{ order.createdAt | date:'shortTime' }}</span>
+                </div>
+                <div class="order-customer">{{ order.customerName }}</div>
+                <div class="order-actions">
+                    <button class="btn-action deliver" (click)="updateStatus(order, 'IN_DELIVERY')">
+                        Enviar Entrega
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Delivery -->
+    <div class="kanban-column delivery">
+        <div class="column-header">
+            <h3>🛵 Em Entrega</h3>
+            <span class="count-badge">{{ deliveryOrders.length }}</span>
+        </div>
+        <div class="order-list">
+            <div *ngFor="let order of deliveryOrders" class="order-card fade-in">
+                <div class="order-top">
+                    <span class="order-id">#{{ order.id }}</span>
+                    <span class="order-customer">{{ order.customerName }}</span>
+                </div>
+                <div class="order-contact" *ngIf="order.customerPhone">
+                    📞 {{ order.customerPhone }}
+                </div>
+                <div class="order-actions">
+                    <button class="btn-action complete" (click)="updateStatus(order, 'COMPLETED')">
+                        Concluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Completed -->
+    <div class="kanban-column completed">
+        <div class="column-header">
+            <h3>🏁 Concluídos</h3>
+            <span class="count-badge">{{ completedOrders.length }}</span>
+        </div>
+        <div class="order-list">
+            <div *ngFor="let order of completedOrders" class="order-card fade-in opacity-75">
+                <div class="order-top">
+                    <span class="order-id">#{{ order.id }}</span>
+                    <span class="text-success fw-bold">R$ {{ order.total | number:'1.2-2' }}</span>
+                </div>
+                <div class="order-customer text-muted">{{ order.customerName }}</div>
+            </div>
         </div>
     </div>
 </div>
