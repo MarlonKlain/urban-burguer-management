@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 import { Client, Message } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { Subject, Observable } from 'rxjs';
@@ -13,7 +14,7 @@ export class WebSocketService {
     constructor() {
         this.stompClient = new Client({
             // Use SockJS for fallback
-            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            webSocketFactory: () => new SockJS(environment.wsUrl),
             debug: (str) => {
                 console.log(str);
             },

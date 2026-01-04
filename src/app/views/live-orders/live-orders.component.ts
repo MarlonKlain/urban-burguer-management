@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, NgZone, ChangeDetectorRef } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { WebSocketService } from '../../services/websocket.service';
 import { HttpClient } from '@angular/common/http';
@@ -43,7 +44,7 @@ export class LiveOrdersComponent implements OnInit, OnDestroy {
     }
 
     loadHistoricOrders() {
-        this.http.get<any[]>('http://localhost:8080/api/orders').subscribe(data => {
+        this.http.get<any[]>(`${environment.apiUrl}/orders`).subscribe(data => {
             this.ngZone.run(() => {
                 console.log('Historic orders loaded:', data);
                 this.orders = data;
